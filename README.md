@@ -1,6 +1,8 @@
 #IOT avec Lora
+
 L'objectif de cette présentation est de réaliser une maquette pour mettre en oeuvre un IOT sur le réseau Live Objetc LPWA d'Orange en utilisant les commandes AT et récupération des données avec le protocole REST via curl.
 ##Matériel utilisé pour l'IOT :
+
 Le système mis en oeuvre est réalisé à partir d'une carte **Nucleo-L476** et d'une carte d'extension **I-Nucleo-LRAW1** de la société ST. La carte Nucleo-L476 a pour objectif de transmettre les commandes AT reçues sur le port USB vers la carte d'extension.
 ![](images/materiel.jpg) 
 La carte d'extension I-Nucleo LRAW1 est pilotée par la liaison série nommée M_LPUART (TX et RX). l'interconnexion des deux cartes est donc réalisé de la manière suivante :
@@ -8,6 +10,7 @@ La carte d'extension I-Nucleo LRAW1 est pilotée par la liaison série nommée M
 Le port **Serial3** peut être utilisé à cet usage. Ainsi les broches **PC_10** et **PC_11** de la carte mère sont respectivement relièes aux broches **M_LPUART_RX** et  **M_LPUART_TX** sur le connecteur C9 de la carte d'extension.
 
 ##Programmation de la carte Nucléo-L476 :
+
 La carte Nucleo-L476 est basée sur la technologie STM32. Le développement logiciel est réalisé avec la plateforme Arduino IDE.
 
 	/*
@@ -56,12 +59,14 @@ PuTTY permet également de récupérer l'identifiant **DevEui** de la carte d'ex
 	e2,4f,43,ff,fe,44,be,8c
 	ok
 ##Déclaration de l'IOT dans la plateforme Live Objetc LPWA d'Orange :
+
 Après connexion sur le [site d'orange](https://lpwa.liveobjects.orange-business.com/#/login), il est nécessaire d'ajouter le nouvel équipement sur la plateforme.
  ![](images/LiveObject_Equipements.jpg) 
  Les informations concernant cet équipement sont par exemple :
   ![](/home/USERS/PROFS/pcruchet/Documents/Projets/ObjetsConnectes/images/LiveObject_AjoutEquipement_SpareBox02.jpg)  
   Pour la carte d'extension I-NUCLEO-LRAW1, le profil est obligatoirement **MURATA** qui correspond à la puce utilisé par ST. Le **DevEui** soit un identifiant unique sur 64 bits (8 octets) est celui relevé avec la commande AT+EUI. Les deux autres champs, **AppEui** avec une valeur sur 64 bits (8 octets) et **AppKey** avec une valeur sur 128 bits (16 octets) sont à déterminer en fonction de l'application, ils sont là pour sécuriser l'accès au cloud.
 ## Envoi de données sur le cloud Orange :
+
 Dans un premier temps, il est nécessaire de finir le paramétrage de l'IOT avant de pouvoir envoyer des données.
 
 	ATE=1                                    // pour avoir de l'écho avec PuTTY
@@ -82,6 +87,7 @@ La carte d'extension répond **Ok** dans un premier temps et lorsque la passerel
 	AT+SEND=2,001122334455,1 	  //Ecriture sur le port 2 des valeurs 001122334455 et demande d'accusé de réception (le 3ème paramètre à 1)
 
 ##Récupération des données sur le cloud Orange :
+
 Pour obtenir les données à partir du cloud, une clé API doit être défini avec un **rôle d'utilisateur LPWA**. Elle peut être ajoutée comme l'indique la figure suivante :
 ![](images/LiveObject_ClésAPI_1.jpg) 
 Seul le nom de la clé et la date de limite de validité sont à saisir obligatoirement, la description est facultative. Pour terminer, l'appui sur le bouton ajouter fait apparaitre la nouvelle fenêtre indiquant la valeur de la clé. Cette valeur est à conserver précieusement, elle sera utile pour interroger le cloud. Elle ne peut plus être obtenue lorsque la fenêtre est fermée.
